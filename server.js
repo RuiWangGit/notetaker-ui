@@ -5,8 +5,8 @@ const PORT=9090;
 
 var options = {
   router: {
-    'localhost/api': '127.0.0.1:8080',
-    'localhost': '127.0.0.1:8080'
+    'localhost/api': 'localhost:8080',
+    'localhost': 'localhost:8000'
   }
 };
 

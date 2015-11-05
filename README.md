@@ -2,15 +2,15 @@ This is a Twitter Bootstrap + AngularJS app (that was initially generated using 
 
 # Running the application
 ## Run Proxy server
-To ensure your browser can load JS projects from URL#1 and then call another URL#2, I am using a simple proxy server setup.
+To ensure your browser can load JS projects from URL#1 and then call another URL#2 for the RESTful API backend services, I am using a simple proxy server setup. All web requests from browser go to localhost:9090 which is the proxy server. Run the proxy server using Nodejs.
 
- node server.js
+    node server.js
 
 This forwards all localhost/api calls to the notetaker-services endpoint running on localhost:8080. Rest of the requests are forwarded to the UI JavaScript project deployed on a simple HTTP server running on localhost:8000.
 
-## Run HTTP server 
-Run simple HTTP server using Python to serve the Web UI code
- python -m SimpleHTTPServer
+## Run HTTP server using Grunt 
+    grunt serve
 
-Make sure you have the notetaker-services backend application running. To access the application go to http://localhost:9090/app/index.html
+Make sure you have the notetaker-services backend application running. To access the application go to 
+    http://localhost:9090/app/index.html
 
