@@ -1,0 +1,7 @@
+{
+  "name": "careerlens",
+  "description": "Career Lens",
+  "devDependencies": {
+    "http-proxy" : "0.10.4"
+  }
+}

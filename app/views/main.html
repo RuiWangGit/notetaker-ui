@@ -1,0 +1,59 @@
+<div ng-include src="'views/navigation.html'"></div>
+
+<div class="container">
+    <div id="errorsPanel" class="panel panel-danger" ng-if="errors">
+        <ul>
+            <li ng-repeat="error in errors">
+                {{error.message}}
+            </li>
+        </ul>
+    </div>
+  <div class="dataTables_filter" id="searchFilter">
+    <label>Filter By: <input type="text" ng-model="criteria"/></label>
+  </div>
+  <table class="table table-striped table-bordered table-responsive">
+    <thead>
+      <tr>
+        <th>Reminder Note</th>
+        <th ng-click="sort('createdOnDate')">
+          Complete By<span
+         ng-class="{'glyphicon glyphicon-chevron-up': isSortUp('createdOnDate'), 'glyphicon glyphicon-chevron-down': isSortDown('createdOnDate')}"></span>
+       </th>
+       <th></th>
+     </tr>
+   </thead>
+   <tbody>
+    <tr ng-repeat="note in notes | filter:criteria | orderBy:sortField:reverse">
+      <td>{{note.message}}</td>
+      <td>{{note.createdOnDate | date:'MM-dd-yyyy'}}</td>
+      <td>
+        <a ng-click="gotoEdit()"><span class="glyphicon glyphicon-edit"></span></a>
+        <a data-toggle="modal" data-target="#confirmDeleteDialog" ng-click="setSelectedRowId($index)">
+          <span class="glyphicon glyphicon-trash"></span></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal fade" id="confirmDeleteDialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+          aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Confirm Action</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this note?</p>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-primary" data-dismiss="modal">No</a>
+          <button type="button" class="btn btn-default" data-dismiss="modal"
+          ng-click="deleteNote()">Yes</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>    
+</div>
