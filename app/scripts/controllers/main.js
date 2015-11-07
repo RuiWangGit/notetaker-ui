@@ -21,9 +21,10 @@ angular.module('notetakeruiApp')
  * Controller of the notetakeruiApp
  */
 angular.module('notetakeruiApp')
-  .controller('MainCtrl', ['$scope', '$http', '$location', '$filter', function ($scope, $http, $location, $filter) {
+  .controller('MainCtrl', ['notesService', '$scope', '$http', '$location', '$filter', function (notesService, $scope, $http, $location, $filter) {
         $scope.sortField = undefined;
         $scope.reverse = false;
+        $scope.status = "";
 
         $scope.sort = function (fieldName) {
             if ($scope.sortField === fieldName) {
@@ -50,11 +51,18 @@ angular.module('notetakeruiApp')
         };
 
         $scope.deleteNote = function () {
-            $http.delete('/api/notes/' + $scope.notes[$scope.selectedRowId].id).success(function (data) {
+            var id = $scope.notes[$scope.selectedRowId].id;
+            notesService.deleteNote(id).success(function (data) {
                 $scope.getAllNotes();
-            }).error(function (data, status) {
-                    $scope.errors = data.errors;
-                });
+            })
+            .error(function (error) {
+                $scope.status = 'Unable to delete note: ' + id;
+            });            
+            // $http.delete('/api/notes/' + $scope.notes[$scope.selectedRowId].id).success(function (data) {
+            //     $scope.getAllNotes();
+            // }).error(function (data, status) {
+            //         $scope.errors = data.errors;
+            // });
         };
 
         $scope.cancelNewNoteForm = function () {
@@ -66,30 +74,43 @@ angular.module('notetakeruiApp')
             $scope.message = '';
             $scope.createdOnDate = '';
             $scope.errors = null;
+            $scope.status = "";
         };
 
 
         $scope.addNewNote = function () {
         	var niceDate = $filter('date')($scope.createdOnDate, 'MM/dd/yyyy');
-        	//alert(niceDate);
-            var reqData = {"message": $scope.message, "createdOnDate": niceDate};
-            $http.post('/api/notes/add', reqData, {}).success(function (data, status) {
-                if (status == 200) {
-                    $scope.clearNewNoteFields();
-                    $location.path("list");
-                }
-            }).error(function (data, status) {
-                    $scope.errors = data.errors;
-                });
+            var newNote = {"message": $scope.message, "createdOnDate": niceDate};
+            notesService.addNewNote(newNote).success(function (data) {
+                $scope.cancelNewNoteForm();
+            })
+            .error(function (error) {
+                $scope.status = 'Unable to add new note: ' + error.message;
+            });
+
+            // $http.post('/api/notes/add', reqData, {}).success(function (data, status) {
+            //     if (status === 200) {
+            //         $scope.clearNewNoteFields();
+            //         $location.path("list");
+            //     }
+            // }).error(function (data, status) {
+            //         $scope.errors = data.errors;
+            // });
         };
 
 
         $scope.getAllNotes = function () {
-            $http.get('/api/notes/').success(function (data) {
+            notesService.getAllNotes().success(function (data) {
                 $scope.notes = data;
-            }).error(function (data, status) {
-            	alert(status);
-                });
+            })
+            .error(function (error) {
+                $scope.status = 'Unable to retrieve notes: ' + error.message;
+            });
+            // $http.get('/api/notes/').success(function (data) {
+            //     $scope.notes = data;
+            // }).error(function (data, status) {
+            // 	alert(status);
+            // });
         };
         $scope.getAllNotes();    
   }]);
