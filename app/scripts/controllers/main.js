@@ -101,7 +101,8 @@ angular.module('notetakeruiApp')
 
         $scope.getAllNotes = function () {
             notesService.getAllNotes().success(function (data) {
-                $scope.notes = data;
+                $scope.notes = data.notes;
+                $scope.quote = data.quote;
             })
             .error(function (error) {
                 $scope.status = 'Unable to retrieve notes: ' + error.message;
